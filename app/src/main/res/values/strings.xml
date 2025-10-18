@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Solana Tap Pay</string>
+    <string name="mode_selection_title">Select Mode</string>
+    <string name="mode_buyer">Buyer</string>
+    <string name="mode_merchant">Merchant</string>
+    <string name="mode_warning">Mode cannot be changed after selection</string>
+    
+    <string name="merchant_title">Merchant</string>
+    <string name="buyer_title">Buyer</string>
+    <string name="settings_title">Settings</string>
+    
+    <string name="amount_hint">Amount (USD)</string>
+    <string name="start_request">Start Payment Request</string>
+    <string name="stop_request">Stop Request</string>
+    <string name="advertising">Advertising: Waiting for buyer…</string>
+    
+    <string name="scan_status">Scanning for merchants…</string>
+    <string name="payment_processing">Processing payment…</string>
+    <string name="payment_success">Payment successful!</string>
+    
+    <string name="your_wallet">Your Wallet</string>
+    <string name="copy_address">Copy Address</string>
+    <string name="fund_wallet">Fund Wallet (Devnet)</string>
+    <string name="view_explorer">View on Explorer</string>
+    
+    <string name="foreground_merchant_title">Merchant Active</string>
+    <string name="foreground_merchant_text">Broadcasting payment request</string>
+    <string name="foreground_buyer_title">Buyer Active</string>
+    <string name="foreground_buyer_text">Scanning for payment requests</string>
+    
+    <!-- Transport modes -->
+    <string name="transport_ble">BLE</string>
+    <string name="transport_nfc">NFC</string>
+    <string name="transport_label">Transport</string>
+    
+    <!-- NFC messages -->
+    <string name="nfc_not_supported">NFC not supported on this device</string>
+    <string name="nfc_disabled">NFC is disabled. Please enable it in Settings.</string>
+    <string name="nfc_ready_merchant">Ready to write NFC tag</string>
+    <string name="nfc_ready_buyer">Ready to scan NFC tag</string>
+    <string name="nfc_write_success">Payment request written to NFC</string>
+    <string name="nfc_tag_detected">NFC tag detected</string>
+    <string name="hold_nfc_tag">Hold NFC tag close to device</string>
+    
+    <!-- HCE Service -->
+    <string name="hce_service_description">Solana Tap Pay NFC Payment Service</string>
+    <string name="aid_group_description">Solana Payment Application</string>
+    
+    <!-- Merchant Offramp -->
+    <string name="convert_to_fiat">💰 Convert to Fiat</string>
+</resources>
+

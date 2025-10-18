@@ -1,0 +1,179 @@
+================================================================================
+  SOLANA TAP & PAY - TESTING GUIDE
+================================================================================
+
+REQUIREMENTS:
+  ✓ 2 Android phones (API 26+)
+  ✓ Bluetooth enabled on both
+  ✓ Internet connection
+  ✓ ~5 minutes setup time
+
+================================================================================
+STEP 1: BUILD APK
+================================================================================
+
+cd "/Users/abhyuday/Desktop/jai baba baijnath"
+./build-apk.sh
+
+APK Location: app/build/outputs/apk/debug/app-debug.apk
+
+================================================================================
+STEP 2: INSTALL ON BOTH DEVICES
+================================================================================
+
+Via USB:
+  adb install app/build/outputs/apk/debug/app-debug.apk
+
+Or manually:
+  - Copy APK to phone
+  - Open and install
+  - Allow "Unknown Sources" if prompted
+
+================================================================================
+STEP 3: SETUP DEVICE 1 (MERCHANT)
+================================================================================
+
+1. Launch app
+2. Select "MERCHANT" mode (permanent choice!)
+3. Tap Settings icon (top right)
+4. Tap "Copy Address"
+5. Fund wallet:
+   
+   solana airdrop 1 <PASTE_ADDRESS> --url devnet
+   
+   Or web: https://faucet.solana.com (select Devnet)
+
+6. Wait 10 seconds, tap "Refresh Balance"
+7. Verify balance shows ~1.0 SOL
+8. Go back to main screen
+
+================================================================================
+STEP 4: SETUP DEVICE 2 (BUYER)
+================================================================================
+
+1. Launch app
+2. Select "BUYER" mode (permanent choice!)
+3. Tap Settings icon (top right)
+4. Tap "Copy Address"
+5. Fund wallet:
+   
+   solana airdrop 0.5 <PASTE_ADDRESS> --url devnet
+
+6. Wait 10 seconds, tap "Refresh Balance"
+7. Verify balance shows ~0.5 SOL
+8. Go back to main screen
+
+================================================================================
+STEP 5: TEST PAYMENT
+================================================================================
+
+MERCHANT (Device 1):
+  1. Enter amount: 5.00
+  2. See conversion: ~0.05 SOL
+  3. Tap "Start Payment Request"
+  4. Wait for "Advertising: Waiting for buyer..."
+  5. KEEP SCREEN ON AND APP IN FOREGROUND
+
+BUYER (Device 2):
+  1. Should show "Scanning for merchants..."
+  2. BRING CLOSE TO MERCHANT (<2 meters)
+  3. Wait 2-5 seconds...
+  4. ✓ PAYMENT EXECUTES AUTOMATICALLY!
+  5. Success screen appears with transaction signature
+  6. Tap "View on Explorer" to see on blockchain
+
+================================================================================
+EXPECTED RESULTS
+================================================================================
+
+✓ Buyer sees: "Payment successful!" with signature
+✓ Transaction visible on https://explorer.solana.com/?cluster=devnet
+✓ Merchant balance increases (check Settings → Refresh Balance)
+✓ Total time: 2-5 seconds
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+"No merchant detected"
+  → Bring devices closer (<1 meter)
+  → Ensure merchant shows "Advertising..."
+  → Check Bluetooth is enabled
+  → Restart both apps
+
+"Payment failed: insufficient funds"
+  → Fund buyer wallet more: solana airdrop 0.5 ADDRESS --url devnet
+  → Check balance in Settings
+
+"Permission denied"
+  → Settings → Apps → Solana Tap Pay → Permissions
+  → Enable: Location, Bluetooth, Notifications
+
+"RPC error" or timeout
+  → Check internet connection
+  → Try again (devnet can be slow)
+
+================================================================================
+VERIFY TRANSACTION
+================================================================================
+
+Get signature from buyer success screen, then:
+
+https://explorer.solana.com/tx/<SIGNATURE>?cluster=devnet
+
+Should show:
+  ✓ Status: Success
+  ✓ From: Buyer address
+  ✓ To: Merchant address
+  ✓ Amount: ~0.05 SOL
+
+================================================================================
+QUICK COMMANDS REFERENCE
+================================================================================
+
+# Build APK
+./build-apk.sh
+
+# Install on device
+adb install -r app/build/outputs/apk/debug/app-debug.apk
+
+# Fund wallet
+solana airdrop 1 <ADDRESS> --url devnet
+
+# Check balance
+solana balance <ADDRESS> --url devnet
+
+# Reset app (choose mode again)
+adb shell pm clear com.solanatappay
+
+================================================================================
+IMPORTANT SECURITY WARNINGS
+================================================================================
+
+⚠️  THIS IS A PROTOTYPE - DO NOT USE WITH REAL MONEY
+⚠️  Payments execute automatically without approval
+⚠️  Private keys stored locally (insecure for production)
+⚠️  DEVNET ONLY - Never use on mainnet in this form
+
+For production: Require authentication, use server custody, add spending limits
+
+================================================================================
+DOCUMENTATION FILES
+================================================================================
+
+README.md              - Full documentation
+QUICK_START.md         - Fast setup guide
+BUILD_INSTRUCTIONS.md  - Detailed build steps
+PROJECT_SUMMARY.md     - Technical overview
+
+================================================================================
+NEED HELP?
+================================================================================
+
+1. Check README.md Troubleshooting section
+2. Verify both devices have funded wallets
+3. Ensure Bluetooth + Internet enabled
+4. Check Solana devnet status: https://status.solana.com
+
+================================================================================
+

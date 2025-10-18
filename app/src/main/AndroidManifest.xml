@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Bluetooth permissions -->
+    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
+    
+    <!-- Android 12+ (API 31+) Bluetooth permissions -->
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" 
+        android:usesPermissionFlags="neverForLocation" />
+    
+    <!-- Location permissions required for BLE scanning on API < 31 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    
+    <!-- Foreground service -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    
+    <!-- Internet for Solana RPC -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    
+    <!-- NFC permissions -->
+    <uses-permission android:name="android.permission.NFC" />
+    
+    <!-- BLE hardware required -->
+    <uses-feature android:name="android.hardware.bluetooth_le" android:required="true" />
+    
+    <!-- NFC hardware (not required, so app works on non-NFC devices) -->
+    <uses-feature android:name="android.hardware.nfc" android:required="false" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@drawable/soltap"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/soltap"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.SolanaTapPay"
+        tools:targetApi="31">
+        
+        <!-- Mode Selection Activity (launcher) -->
+        <activity
+            android:name=".ui.ModeSelectionActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+        <!-- Merchant Activity -->
+        <activity
+            android:name=".ui.MerchantActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        
+        <!-- NFC Background Handler (launches automatically on NFC tap) -->
+        <activity
+            android:name=".ui.NfcBackgroundHandler"
+            android:theme="@style/Theme.Transparent"
+            android:exported="true"
+            android:taskAffinity=""
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask">
+            <!-- NFC intent filters for NDEF discovery (physical tags) -->
+            <intent-filter android:priority="1000">
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="application/solana-payment" />
+            </intent-filter>
+            <!-- NFC intent filter for HCE (phone-to-phone) -->
+            <intent-filter android:priority="1000">
+                <action android:name="android.nfc.action.TECH_DISCOVERED" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <meta-data
+                android:name="android.nfc.action.TECH_DISCOVERED"
+                android:resource="@xml/nfc_tech_filter" />
+        </activity>
+        
+        <!-- Buyer Activity (for manual use) -->
+        <activity
+            android:name=".ui.BuyerActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop" />
+        
+        <!-- Settings Activity -->
+        <activity
+            android:name=".ui.SettingsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        
+        <!-- Merchant Dashboard -->
+        <activity
+            android:name=".ui.MerchantDashboardActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        
+        <!-- Buyer History -->
+        <activity
+            android:name=".ui.BuyerHistoryActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        
+        <!-- Convert to Fiat Activity -->
+        <activity
+            android:name=".ui.ConvertToFiatActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        
+        <!-- Agent Registration Activity -->
+        <activity
+            android:name=".ui.AgentRegistrationActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        
+        <!-- BLE Advertiser Service (Merchant) -->
+        <service
+            android:name=".ble.MerchantAdvertiserService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="connectedDevice" />
+        
+        <!-- BLE Scanner Service (Buyer) -->
+        <service
+            android:name=".ble.BuyerScannerService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="connectedDevice" />
+        
+        <!-- NFC Host Card Emulation Service (Merchant) -->
+        <service
+            android:name=".nfc.PaymentHceService"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.BIND_NFC_SERVICE">
+            <intent-filter>
+                <action android:name="android.nfc.cardemulation.action.HOST_APDU_SERVICE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.nfc.cardemulation.host_apdu_service"
+                android:resource="@xml/aid_list" />
+        </service>
+    </application>
+
+</manifest>
+

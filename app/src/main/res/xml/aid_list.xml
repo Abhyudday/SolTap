@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<host-apdu-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/hce_service_description"
+    android:requireDeviceUnlock="false">
+    <aid-group android:description="@string/aid_group_description"
+        android:category="other">
+        <!-- Our custom AID for Solana payment HCE -->
+        <aid-filter android:name="F0534F4C414E4150415900"/>
+    </aid-group>
+</host-apdu-service>
+
